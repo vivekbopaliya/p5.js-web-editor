@@ -14,6 +14,10 @@ const sketches = (state = [], action) => {
         return { ...sketch };
       });
     }
+    case ActionTypes.TOGGLE_READONLY:
+      return state.map((sketch) => {
+        return { ...sketch, readOnly: action.payload.readOnly }
+      })
     default:
       return state;
   }

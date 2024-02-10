@@ -38,6 +38,7 @@ const projectSchema = new Schema(
     serveSecure: { type: Boolean, default: false },
     files: { type: [fileSchema] },
     _id: { type: String, default: shortid.generate },
+    readOnly: { type: Boolean, default: false },
     slug: { type: String }
   },
   { timestamps: true, usePushEach: true }

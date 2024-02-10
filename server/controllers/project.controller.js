@@ -9,6 +9,8 @@ import Project from '../models/project';
 import User from '../models/user';
 import { resolvePathToFile } from '../utils/filePath';
 import generateFileSystemSafeName from '../utils/generateFileSystemSafeName';
+import { func } from 'prop-types';
+import project from '../models/project';
 
 export {
   default as createProject,
@@ -291,4 +293,27 @@ export function downloadProjectAsZip(req, res) {
     // save project to some path
     buildZip(project, req, res);
   });
+}
+
+export async function toggleReadOnly(req, res) {
+  try {
+    const { sketch, readOnlyType } = req.body;
+
+    if (!sketch) {
+      return res.status(403).json({ msg: "Could not find project" });
+    }
+
+    if (!readOnlyType) {
+      return res.status(403).json({ msg: "Invalid readOnly type provided" })
+    }
+
+    const updatedSketch = await Project.findByIdAndUpdate(sketch._id, {
+      readOnly: readOnlyType
+    });
+
+    return res.status(200).json(updatedSketch);
+
+  } catch (error) {
+    return res.status(500).json(error)
+  }
 }

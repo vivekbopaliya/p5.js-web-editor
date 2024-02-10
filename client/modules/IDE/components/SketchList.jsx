@@ -24,6 +24,7 @@ import getConfig from '../../../utils/getConfig';
 
 import ArrowUpIcon from '../../../images/sort-arrow-up.svg';
 import ArrowDownIcon from '../../../images/sort-arrow-down.svg';
+import ChangeAccessibility from './ChangeAccessibility';
 
 const ROOT_URL = getConfig('API_URL');
 
@@ -35,7 +36,9 @@ class SketchListRowBase extends React.Component {
     super(props);
     this.state = {
       renameOpen: false,
-      renameValue: props.sketch.name
+      renameValue: props.sketch.name,
+      accessibility: props.sketch.accessibility,
+      isChangeAccessbilityOpen: false
     };
     this.renameInput = React.createRef();
   }
@@ -136,6 +139,11 @@ class SketchListRowBase extends React.Component {
           >
             {this.props.t('SketchList.DropdownDuplicate')}
           </MenuItem>
+          <MenuItem hideIf={!this.props.user.authenticated} onClick={() => this.setState({isChangeAccessbilityOpen: true})}>
+            Change Accessibiliy 
+          </MenuItem>
+
+
           <MenuItem
             hideIf={!this.props.user.authenticated}
             onClick={() => {
@@ -160,6 +168,7 @@ class SketchListRowBase extends React.Component {
 
   render() {
     const { sketch, username, mobile } = this.props;
+    console.log(sketch)
     const { renameOpen, renameValue } = this.state;
     let url = `/${username}/sketches/${sketch.id}`;
     if (username === 'p5') {
@@ -194,6 +203,10 @@ class SketchListRowBase extends React.Component {
           <td>{formatDateCell(sketch.updatedAt, mobile)}</td>
           {this.renderDropdown()}
         </tr>
+
+        {isChangeAccessbilityOpen && <Overlay>
+          <ChangeAccessibility sketch={this.props.sketch} currentAccessType={this.state.accessibility}/>
+          </Overlay>}
       </React.Fragment>
     );
   }
@@ -204,13 +217,15 @@ SketchListRowBase.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
-    updatedAt: PropTypes.string.isRequired
+    updatedAt: PropTypes.string.isRequired,
+    readOnly: PropTypes.bool.isRequired
   }).isRequired,
   username: PropTypes.string.isRequired,
   user: PropTypes.shape({
     username: PropTypes.string,
     authenticated: PropTypes.bool.isRequired
   }).isRequired,
+  toggleReadOnly: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,
   showShareModal: PropTypes.func.isRequired,
   cloneProject: PropTypes.func.isRequired,
@@ -438,7 +453,8 @@ SketchList.propTypes = {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       createdAt: PropTypes.string.isRequired,
-      updatedAt: PropTypes.string.isRequired
+      updatedAt: PropTypes.string.isRequired,
+    readOnly: PropTypes.bool.isRequired
     })
   ).isRequired,
   username: PropTypes.string,

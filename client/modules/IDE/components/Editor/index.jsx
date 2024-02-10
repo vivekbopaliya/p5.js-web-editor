@@ -505,7 +505,8 @@ class Editor extends React.Component {
     const editorHolderClass = classNames({
       'editor-holder': true,
       'editor-holder--hidden':
-        this.props.file.fileType === 'folder' || this.props.file.url
+        this.props.file.fileType === 'folder' || this.props.file.url,
+      'editor-holder--readonly' : this.props.sketch.readOnly 
     });
 
     return (
@@ -593,6 +594,15 @@ Editor.propTypes = {
   lineNumbers: PropTypes.bool.isRequired,
   lintWarning: PropTypes.bool.isRequired,
   linewrap: PropTypes.bool.isRequired,
+  sketch: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      createdAt: PropTypes.string.isRequired,
+      updatedAt: PropTypes.string.isRequired,
+    readOnly: PropTypes.bool.isRequired
+    })
+  ).isRequired,
   lintMessages: PropTypes.arrayOf(
     PropTypes.shape({
       severity: PropTypes.oneOf(['error', 'hint', 'info', 'warning'])

@@ -410,3 +410,23 @@ export function deleteProject(id) {
       });
   };
 }
+
+export function toggleReadOnly(sketch, readOnlyType) {
+  return (dispatch) => {
+    apiClient.put('/project/accessibility', { sketch, readOnlyType }).then((res) => {
+      dispatch({
+        ActionTypes: ActionTypes.TOGGLE_READONLY,
+        payload: res.data
+      })
+
+      const newType = res.data.readOnly;
+      dispatch(showToast(`${sketch.name} is switched to ${newType}`));
+      dispatch(setToastText(1500));
+
+
+    }).error((err) => {
+      dispatch(ActionTypes.ERROR)
+      return err;
+    })
+  }
+}

@@ -28,7 +28,7 @@ const Toolbar = (props) => {
   const project = useSelector((state) => state.project);
   const autorefresh = useSelector((state) => state.preferences.autorefresh);
   const dispatch = useDispatch();
-
+  console.log(project);
   const { t } = useTranslation();
 
   const playButtonClass = classNames({
@@ -111,6 +111,15 @@ const Toolbar = (props) => {
           }
           return null;
         })()}
+        <section>
+          {(() => {
+            if(project.readOnly) {
+              return (
+                <p>readonly </p>
+              )
+            }
+          } )()}
+        </section>
       </div>
       <button
         className={preferencesButtonClass}

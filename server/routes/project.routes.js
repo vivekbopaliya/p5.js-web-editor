@@ -22,6 +22,8 @@ router.delete(
 
 router.get('/projects', ProjectController.getProjects);
 
+router.put('/project/accessibility', ProjectController.toggleReadOnly)
+
 router.get('/:username/projects', ProjectController.getProjectsForUser);
 
 router.get('/projects/:project_id/zip', ProjectController.downloadProjectAsZip);
